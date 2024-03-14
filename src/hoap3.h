@@ -16,9 +16,10 @@ enum class Base
 
 struct MC_ROBOTS_DLLAPI HOAP3RobotModule : public mc_rbdyn::RobotModule
 {
-  HOAP3RobotModule();
+  HOAP3RobotModule(const std::string& moduleName, Base base, bool canonical = false);
 
  protected:
+  std::string moduleName_;
   Base base_;
   bool canonical_ = true;
 };
@@ -42,11 +43,24 @@ extern "C"
     ROBOT_MODULE_CHECK_VERSION("HOAP3")
     if (n == "HOAP3")
     {
-      return new mc_robots::HOAP3RobotModule(mc_robots::Base::Floating, false);
+      return new mc_robots::HOAP3RobotModule("HOAP3", mc_robots::Base::Floating, false);
+    }
+    else if (n == "HOAP3::Canonical")
+    {
+      return new mc_robots::HOAP3RobotModule("HOAP3", mc_robots::Base::Floating, true);
     }
     else if (n == "HOAP3::Fixed")
     {
-      return new mc_robots::HOAP3RobotModule(mc_robots::Base::Fixed, false);
+      return new mc_robots::HOAP3RobotModule("HOAP3::Fixed", mc_robots::Base::Fixed, false);
+    }
+    else if (n == "HOAP3::Fixed::Canonical")
+    {
+      return new mc_robots::HOAP3RobotModule("HOAP3::Fixed", mc_robots::Base::Fixed, true);
+    }
+    else
+    {
+      mc_rtc::log::error("HOAP3 module cannot create an object of type {}", n);
+      return nullptr;
     }
   }
 }
