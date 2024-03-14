@@ -1,0 +1,3 @@
+#pragma once
+
+constexpr auto HOAP3_DESCRIPTION_PATH = "@HOAP3_DESCRIPTION_PATH@";
