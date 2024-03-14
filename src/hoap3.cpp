@@ -9,12 +9,9 @@ namespace mc_robots
 
 constexpr auto PI = mc_rtc::constants::PI;
 
-HOAP3RobotModule::HOAP3RobotModule(const std::string& moduleName, Base base, bool canonical)
-    : RobotModule(HOAP3_DESCRIPTION_PATH, "hoap3",
-                  fmt::format("{}/urdf/hoap3.urdf", HOAP3_DESCRIPTION_PATH)),
-      moduleName_(moduleName),
-      base_(base),
-      canonical_(canonical)
+HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bool canonical)
+: RobotModule(HOAP3_DESCRIPTION_PATH, "hoap3", fmt::format("{}/urdf/hoap3.urdf", HOAP3_DESCRIPTION_PATH)),
+  moduleName_(moduleName), base_(base), canonical_(canonical)
 {
   rsdf_dir = fmt::format("{}/rsdf", path);
   calib_dir = fmt::format("{}/calib", path);
@@ -25,7 +22,7 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string& moduleName, Base base, boo
 
   _canonicalParameters = {moduleName_ + "::Canonical"};
 
-  if (!canonical)
+  if(!canonical)
   {
     // TODO: canonical filtered links
     // virtualLinks_.push_back("...");
@@ -104,10 +101,9 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string& moduleName, Base base, boo
   _lipmStabilizerConfig.rightFootSurface = "RightFootCenter";
   _lipmStabilizerConfig.torsoBodyName = "torso";
   _lipmStabilizerConfig.comHeight = 0.78;
-  _lipmStabilizerConfig.comActiveJoints =
-      {
-          "Root", "R_HIP_Y", "R_HIP_R", "R_HIP_P", "R_KNEE_P", "R_ANKLE_P", "R_ANKLE_R",
-          "L_HIP_Y", "L_HIP_R", "L_HIP_P", "L_KNEE_P", "L_ANKLE_P", "L_ANKLE_R"};
+  _lipmStabilizerConfig.comActiveJoints = {"Root",      "R_HIP_Y",   "R_HIP_R",  "R_HIP_P", "R_KNEE_P",
+                                           "R_ANKLE_P", "R_ANKLE_R", "L_HIP_Y",  "L_HIP_R", "L_HIP_P",
+                                           "L_KNEE_P",  "L_ANKLE_P", "L_ANKLE_R"};
   _lipmStabilizerConfig.torsoPitch = 0;
   _lipmStabilizerConfig.copAdmittance = Eigen::Vector2d{0.01, 0.01};
   _lipmStabilizerConfig.dcmPropGain = 5.0;
@@ -117,7 +113,13 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string& moduleName, Base base, boo
   _lipmStabilizerConfig.dcmIntegratorTimeConstant = 10;
 
   // TODO: check this
-  _ref_joint_order = {"CHEST_H_PAN_joint", "H_PAN_H_TILT_joint", "H_TILT_H_ROLL_joint", "CHEST_R_SFE_joint", "R_SFE_R_SAA_joint", "R_SAA_R_SHR_joint", "R_SHR_R_EB_joint", "R_EB_R_WR_joint", "CHEST_L_SFE_joint", "L_SFE_L_SAA_joint", "L_SAA_L_SHR_joint", "L_SHR_L_EB_joint", "L_EB_L_WR_joint", "CHEST_WAIST_joint", "WAIST_R_LR_joint", "R_LR_R_LAA_joint", "R_LAA_R_LFE_joint", "R_LFE_R_KN_joint", "R_KN_R_AFE_joint", "R_AFE_R_AAA_joint", "WAIST_L_LR_joint", "L_LR_L_LAA_joint", "L_LAA_L_LFE_joint", "L_LFE_L_KN_joint", "L_KN_L_AFE_joint", "L_AFE_L_AAA_joint"};
+  _ref_joint_order = {"CHEST_H_PAN_joint", "H_PAN_H_TILT_joint", "H_TILT_H_ROLL_joint", "CHEST_R_SFE_joint",
+                      "R_SFE_R_SAA_joint", "R_SAA_R_SHR_joint",  "R_SHR_R_EB_joint",    "R_EB_R_WR_joint",
+                      "CHEST_L_SFE_joint", "L_SFE_L_SAA_joint",  "L_SAA_L_SHR_joint",   "L_SHR_L_EB_joint",
+                      "L_EB_L_WR_joint",   "CHEST_WAIST_joint",  "WAIST_R_LR_joint",    "R_LR_R_LAA_joint",
+                      "R_LAA_R_LFE_joint", "R_LFE_R_KN_joint",   "R_KN_R_AFE_joint",    "R_AFE_R_AAA_joint",
+                      "WAIST_L_LR_joint",  "L_LR_L_LAA_joint",   "L_LAA_L_LFE_joint",   "L_LFE_L_KN_joint",
+                      "L_KN_L_AFE_joint",  "L_AFE_L_AAA_joint"};
 
   init(rbd::parsers::from_urdf_file(urdf_path, rbd::parsers::ParserParameters{}
                                                    .fixed(base_ == Base::Fixed)
@@ -125,4 +127,4 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string& moduleName, Base base, boo
                                                    .remove_filtered_links(false)));
 }
 
-}  // namespace mc_robots
+} // namespace mc_robots

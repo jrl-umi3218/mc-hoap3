@@ -9,12 +9,15 @@ find_package(mc_rtc REQUIRED)
 
 if("${hoap3_description_INSTALL_PREFIX}" STREQUAL "")
   if("${hoap3_description_SOURCE_PREFIX}" STREQUAL "")
-    message(FATAL_ERROR "Your hoap3_description package does not define where to find the data")
+    message(
+      FATAL_ERROR
+        "Your hoap3_description package does not define where to find the data")
   endif()
   set(HOAP3_DESCRIPTION_PATH "${hoap3_description_SOURCE_PREFIX}")
 else()
   if(EXISTS "${hoap3_description_INSTALL_PREFIX}/share/hoap3_description")
-    set(HOAP3_DESCRIPTION_PATH "${hoap3_description_INSTALL_PREFIX}/share/hoap3_description")
+    set(HOAP3_DESCRIPTION_PATH
+        "${hoap3_description_INSTALL_PREFIX}/share/hoap3_description")
   else()
     set(HOAP3_DESCRIPTION_PATH "${hoap3_description_INSTALL_PREFIX}")
   endif()
