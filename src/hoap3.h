@@ -30,7 +30,7 @@ extern "C"
 {
   ROBOT_MODULE_API void MC_RTC_ROBOT_MODULE(std::vector<std::string> & names)
   {
-    names = {"HOAP3", "HOAP3::Fixed"};
+    names = {"HOAP3", "HOAP3::Canonical", "HOAP3::Fixed", "HOAP3::Fixed::Canonical"};
   }
   ROBOT_MODULE_API void destroy(mc_rbdyn::RobotModule * ptr)
   {
