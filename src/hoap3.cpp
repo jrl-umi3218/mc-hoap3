@@ -7,8 +7,6 @@
 namespace mc_robots
 {
 
-constexpr auto PI = mc_rtc::constants::PI;
-
 HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bool canonical)
 : RobotModule(HOAP3_DESCRIPTION_PATH, "hoap3", fmt::format("{}/urdf/hoap3.urdf", HOAP3_DESCRIPTION_PATH)),
   moduleName_(moduleName), base_(base), canonical_(canonical)
@@ -29,8 +27,8 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bo
   }
 
   // TODO:
-  _bodySensors.emplace_back("Accelerometer", "body", sva::PTransformd(Eigen::Vector3d(-0.0325, 0, 0.1095)));
-  _bodySensors.emplace_back("FloatingBase", "body", sva::PTransformd::Identity());
+  _bodySensors.emplace_back("Accelerometer", "WAIST", sva::PTransformd(Eigen::Vector3d(-0.0325, 0, 0.1095)));
+  _bodySensors.emplace_back("FloatingBase", "WAIST", sva::PTransformd::Identity());
 
   _stance["CHEST_H_PAN_joint"] = {0.0};
   _stance["H_PAN_H_TILT_joint"] = {0.0};
@@ -60,10 +58,8 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bo
   _stance["L_AFE_L_AAA_joint"] = {-0.10471975512};
 
   // FIXME
-  _forceSensors.push_back(
-      mc_rbdyn::ForceSensor("RightFootForceSensor", "r_ankle", sva::PTransformd(Eigen::Vector3d(0, 0, -0.093))));
-  _forceSensors.push_back(
-      mc_rbdyn::ForceSensor("LeftFootForceSensor", "l_ankle", sva::PTransformd(Eigen::Vector3d(0, 0, -0.093))));
+  _forceSensors.push_back(mc_rbdyn::ForceSensor("RightFootForceSensor", "R_FOOT", sva::PTransformd::Identity()));
+  _forceSensors.push_back(mc_rbdyn::ForceSensor("LeftFootForceSensor", "L_FOOT", sva::PTransformd::Identity()));
 
   // FIXME
   _minimalSelfCollisions = {
@@ -90,7 +86,7 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bo
   // _grippers = {{"l_gripper", {"L_HAND_J0", "L_HAND_J1"}, false}, {"r_gripper", {"R_HAND_J0", "R_HAND_J1"}, true}};
 
   // FIXME
-  _default_attitude = {{1., 0., 0., 0., 0., 0., 0.747187}};
+  _default_attitude = {{1., 0., 0., 0., 0., 0., 0.30}};
 
   // Compound Joints
   _compoundJoints = {};
@@ -99,11 +95,22 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bo
   // Configure the stabilizer
   _lipmStabilizerConfig.leftFootSurface = "LeftFootCenter";
   _lipmStabilizerConfig.rightFootSurface = "RightFootCenter";
-  _lipmStabilizerConfig.torsoBodyName = "torso";
-  _lipmStabilizerConfig.comHeight = 0.78;
-  _lipmStabilizerConfig.comActiveJoints = {"Root",      "R_HIP_Y",   "R_HIP_R",  "R_HIP_P", "R_KNEE_P",
-                                           "R_ANKLE_P", "R_ANKLE_R", "L_HIP_Y",  "L_HIP_R", "L_HIP_P",
-                                           "L_KNEE_P",  "L_ANKLE_P", "L_ANKLE_R"};
+  _lipmStabilizerConfig.torsoBodyName = "CHEST";
+  _lipmStabilizerConfig.comHeight = 0.21;
+  _lipmStabilizerConfig.comActiveJoints = {"Root",
+                                           "WAIST_R_LR_joint",
+                                           "R_LR_R_LAA_joint",
+                                           "R_LAA_R_LFE_joint",
+                                           "R_LFE_R_KN_joint",
+                                           "R_KN_R_AFE_joint",
+                                           "R_AFE_R_AAA_joint",
+                                           "WAIST_L_LR_joint",
+                                           "L_LR_L_LAA_joint",
+                                           "L_LAA_L_LFE_joint",
+                                           "L_LFE_L_KN_joint",
+                                           "L_KN_L_AFE_joint",
+                                           "L_AFE_L_AAA_joint"};
+
   _lipmStabilizerConfig.torsoPitch = 0;
   _lipmStabilizerConfig.copAdmittance = Eigen::Vector2d{0.01, 0.01};
   _lipmStabilizerConfig.dcmPropGain = 5.0;

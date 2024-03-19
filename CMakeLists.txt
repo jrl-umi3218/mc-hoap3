@@ -19,3 +19,6 @@ if(NOT ${DISABLE_TESTS})
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+install(FILES etc/LIPMWalking/hoap3.yaml
+        DESTINATION ${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/LIPMWalking/)
