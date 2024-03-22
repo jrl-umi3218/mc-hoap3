@@ -27,7 +27,7 @@ jobs:
           apt: libmc-rtc-dev
         github: |
           - path: jrl-umi3218/hoap3_description
-            options: -DDISABLE_ROS:BOOL=OFF
+            options: -DDISABLE_ROS:BOOL=ON
     - name: Checkout repository code
       uses: actions/checkout@v3
       with:
