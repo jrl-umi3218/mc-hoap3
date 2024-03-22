@@ -1,0 +1,40 @@
+name: CI for mc-hoap3
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        compiler: [gcc, clang]
+        build-type: [Release, RelWithDebInfo]
+    runs-on: ${{ matrix.os }}
+    steps:
+    - name: Install dependencies
+      uses: jrl-umi3218/github-actions/install-dependencies@master
+      with:
+        ubuntu: |
+          apt-mirrors:
+            mc-rtc:
+              cloudsmith: mc-rtc/head
+          apt: libmc-rtc-dev
+        github: |
+          - path: jrl-umi3218/hoap3_description
+            options: -DDISABLE_ROS:BOOL=OFF
+    - name: Checkout repository code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+        path: src/mc_hoap3
+    - name: Build and test
+      uses: jrl-umi3218/github-actions/build-cmake-project@master
+      with:
+        compiler: ${{ matrix.compiler }}
+        build-type: ${{ matrix.build-type }}
