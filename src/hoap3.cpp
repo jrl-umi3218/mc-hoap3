@@ -1,6 +1,8 @@
 #include "hoap3.h"
 
 #include <mc_rtc/logging.h>
+#include <boost/filesystem.hpp>
+namespace bfs = boost::filesystem;
 
 #include "config.h"
 
@@ -132,6 +134,24 @@ HOAP3RobotModule::HOAP3RobotModule(const std::string & moduleName, Base base, bo
                                                    .fixed(base_ == Base::Fixed)
                                                    .filtered_links(virtualLinks)
                                                    .remove_filtered_links(false)));
+
+  std::map<std::string, std::string> bodyToConvex = {
+      {"CHEST", "BODY_LINK01"}, {"H_PAN", "HEAD_LINK01"}, {"H_ROLL", "HEAD_LINK02"}, {"R_SFE", "RARM_LINK01"},
+      {"R_SAA", "RARM_LINK02"}, {"R_SHR", "RARM_LINK03"}, {"R_EB", "RARM_LINK04"},   {"R_WR", "RARM_LINK05"},
+      {"R_HAND", "RHAND"},      {"L_SFE", "LARM_LINK01"}, {"L_SAA", "LARM_LINK02"},  {"L_SHR", "LARM_LINK03"},
+      {"L_EB", "LARM_LINK04"},  {"L_WR", "LARM_LINK05"},  {"L_HAND", "LHAND"},       {"R_LR", "RLEG_LINK01"},
+      {"R_LAA", "RLEG_LINK02"}, {"R_LFE", "RLEG_LINK03"}, {"R_KN", "RLEG_LINK04"},   {"R_AFE", "RLEG_LINK05"},
+      {"R_AAA", "RLEG_LINK06"}, {"L_LR", "LLEG_LINK01"},  {"L_LAA", "LLEG_LINK02"},  {"L_LFE", "LLEG_LINK03"},
+      {"L_KN", "LLEG_LINK04"},  {"L_AFE", "LLEG_LINK05"}, {"L_AAA", "LLEG_LINK06"},  {"WAIST", "BODY_LINK02"}};
+  // Build _convexHull
+  for(const auto & b : mb.bodies())
+  {
+    if(bodyToConvex.count(b.name()) == 0) { continue; }
+    const auto & convexName = bodyToConvex.at(b.name());
+    mc_rtc::log::info("Body name: {} - Convex name: {}", b.name(), convexName);
+    auto ch = bfs::path{convexPath} / (convexName + "-ch.txt");
+    if(bfs::exists(ch)) { _convexHull[b.name()] = {b.name(), ch.string()}; }
+  }
 }
 
 } // namespace mc_robots
