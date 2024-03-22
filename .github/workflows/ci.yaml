@@ -28,11 +28,6 @@ jobs:
         github: |
           - path: jrl-umi3218/hoap3_description
             options: -DDISABLE_ROS:BOOL=ON
-    - name: Checkout repository code
-      uses: actions/checkout@v3
-      with:
-        submodules: recursive
-        path: src/mc_hoap3
     - name: Build and test
       uses: jrl-umi3218/github-actions/build-cmake-project@master
       with:
