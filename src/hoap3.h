@@ -29,13 +29,9 @@ protected:
 extern "C"
 {
   ROBOT_MODULE_API void MC_RTC_ROBOT_MODULE(std::vector<std::string> & names)
-  {
-    names = {"HOAP3", "HOAP3::Canonical", "HOAP3::Fixed", "HOAP3::Fixed::Canonical"};
-  }
+  { names = {"HOAP3", "HOAP3::Canonical", "HOAP3::Fixed", "HOAP3::Fixed::Canonical"}; }
   ROBOT_MODULE_API void destroy(mc_rbdyn::RobotModule * ptr)
-  {
-    delete ptr;
-  }
+  { delete ptr; }
   ROBOT_MODULE_API mc_rbdyn::RobotModule * create(const std::string & n)
   {
     ROBOT_MODULE_CHECK_VERSION("HOAP3")
